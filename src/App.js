@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useContext } from "react";
+import styled from "styled-components";
+import { ThemeProvider } from "styled-components";
+import "./App.css";
 
-function App() {
+import UserScreen from "components/UserScreen";
+import ExpertScreen from "components/ExpertScreen";
+
+import UserProvider, { UserContext } from "components/Login/UserProvider";
+import TopBar from "components/TopBar";
+import useTheme from "hooks/useTheme";
+import theme from "./theme";
+
+function App(props) {
+  const [_theme, switchLight, switchDark] = useTheme();
+  const { user, setUser } = useContext(UserContext);
+  console.log(user, setUser);
+
+  useEffect(() => {
+    console.log("hello", user);
+  }, [user]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme[_theme]}>
+      {user !== "" && <TopBar />}
+      <div className={`${props.className}`}>
+        {user !== "" && (user[0] === "1" ? <UserScreen /> : <ExpertScreen />)}
+      </div>
+    </ThemeProvider>
   );
 }
 
-export default App;
+export default styled(App)`
+  width: 100%;
+`;
